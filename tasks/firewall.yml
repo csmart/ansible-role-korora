@@ -1,0 +1,79 @@
+---
+# The default firewalld zone is FedoraWorkstation which is provided by firewalld
+- name: Install firewall packages
+  dnf:
+    name: firewalld, python3-firewall
+    state: installed
+  register: dnf_firewall_result
+  retries: "{{ korora_task_retries }}"
+  delay: "{{ korora_task_delay }}"
+  until: dnf_firewall_result is succeeded
+  become: true
+
+- name: Ensure firewall service running
+  service:
+    name: firewalld
+    state: started
+    enabled: yes
+  become: true
+
+- name: Interface for firewall
+  debug:
+    var: "hostvars[inventory_hostname].ansible_default_ipv4.interface"
+
+- name: Set default firewall zone
+  command: /bin/firewall-cmd --set-default-zone={{ korora_firewall_default_zone }}
+  register: default_zone
+  changed_when: "'ZONE_ALREADY_SET' not in default_zone.stderr"
+  become: true
+
+- name: Add network interface to default zone
+  firewalld:
+    zone: "{{ korora_firewall_default_zone }}"
+    interface: "{{ hostvars[inventory_hostname].ansible_default_ipv4.interface }}"
+    immediate: true
+    permanent: true
+    state: enabled
+  become: true
+
+- name: Add services to default firewall zone
+  firewalld:
+    service: "{{ item }}"
+    zone: "{{ korora_firewall_default_zone }}"
+    permanent: true
+    state: enabled
+    immediate: true
+  with_items: "{{ korora_firewall['allow'] }}"
+  become: true
+
+- name: Remove services from default firewall zone
+  firewalld:
+    service: "{{ item }}"
+    zone: "{{ korora_firewall_default_zone }}"
+    permanent: true
+    state: disabled
+    immediate: true
+  with_items: "{{ korora_firewall['deny'] }}"
+  become: true
+
+- name: Add custom services to default firewall zone
+  firewalld:
+    service: "{{ item }}"
+    zone: "{{ korora_firewall_default_zone }}"
+    permanent: true
+    state: enabled
+    immediate: true
+  with_items: "{{ korora_firewall_custom['allow'] }}"
+  when: korora_firewall_custom['allow'] is defined and korora_firewall_custom['allow']
+  become: true
+
+- name: Remove custom services from default firewall zone
+  firewalld:
+    service: "{{ item }}"
+    zone: "{{ korora_firewall_default_zone }}"
+    permanent: true
+    state: disabled
+    immediate: true
+  with_items: "{{ korora_firewall_custom['deny'] }}"
+  when: korora_firewall_custom['deny'] is defined and korora_firewall_custom['deny']
+  become: true

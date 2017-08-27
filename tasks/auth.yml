@@ -1,0 +1,23 @@
+---
+# Set authentication
+- name: Install authselect package
+  dnf:
+    name: authselect
+    state: installed
+  register: dnf_authselect_result
+  retries: "{{ korora_task_retries }}"
+  delay: "{{ korora_task_delay }}"
+  until: dnf_authselect_result is succeeded
+  become: true
+
+- name: Get current auth settings
+  command: "authselect current"
+  register: auth_current
+  changed_when: false
+  become: true
+
+- name: Set authentication settings
+  shell: "authselect select sssd --force {{ korora_auth_options }} >/dev/null ; authselect current"
+  register: auth_new
+  changed_when: auth_current.stdout != auth_new.stdout
+  become: true

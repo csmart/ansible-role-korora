@@ -1,0 +1,15 @@
+---
+- include: time.yml
+- include: selinux.yml
+- include: auth.yml
+- include: firewall.yml
+- include: repos.yml
+- include: packages.yml
+- include: services.yml
+- include: system.yml
+- include: lookandfeel-gnome.yml
+  when: korora_desktop == 'gnome'
+
+- name: Completed message
+  debug:
+    msg: Complete! Please reboot and enjoy.

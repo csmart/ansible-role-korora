@@ -1,0 +1,63 @@
+---
+- name: Install service packages
+  dnf:
+    name: "{{ korora_services['install'] }}"
+    state: present
+  register: dnf_services_install_result
+  when: korora_services['install'] is defined and korora_services['install']
+  retries: "{{ korora_task_retries }}"
+  delay: "{{ korora_task_delay }}"
+  until: dnf_services_install_result is succeeded
+  become: true
+
+- name: Enable services
+  service:
+    name: "{{ item }}"
+    state: started
+    enabled: yes
+  ignore_errors: yes
+  when: korora_services['enable'] is defined and korora_services['enable']
+  with_items: "{{ korora_services['enable'] }}"
+  become: true
+
+- name: Disable services
+  service:
+    name: "{{ item }}"
+    state: stopped
+    enabled: no
+  ignore_errors: yes
+  failed_when: false
+  when: korora_services['disable'] is defined and korora_services['disable']
+  with_items: "{{ korora_services['disable'] }}"
+  become: true
+
+- name: Install custom service packages
+  dnf:
+    name: "{{ korora_services_custom['install'] }}"
+    state: present
+  register: dnf_services_install_custom_result
+  when: korora_services_custom['install'] is defined and korora_services_custom['install']
+  retries: "{{ korora_task_retries }}"
+  delay: "{{ korora_task_delay }}"
+  until: dnf_services_install_custom_result is succeeded
+  become: true
+
+- name: Enable custom services
+  service:
+    name: "{{ item }}"
+    state: started
+    enabled: yes
+  ignore_errors: yes
+  with_items: "{{ korora_services_custom['enable'] }}"
+  when: korora_services_custom['enable'] is defined and korora_services_custom['enable']
+  become: true
+
+- name: Disable custom services
+  service:
+    name: "{{ item }}"
+    state: stopped
+    enabled: no
+  ignore_errors: yes
+  with_items: "{{ korora_services_custom['disable'] }}"
+  when: korora_services_custom['disable'] is defined and korora_services_custom['disable']
+  become: true
