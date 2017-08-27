@@ -1,0 +1,161 @@
+---
+# Add external repos
+- name: Activate Fedora Workstation repositories
+  dnf:
+    name: fedora-workstation-repositories
+    state: present
+  register: dnf_fedora_repos_result
+  retries: "{{ korora_task_retries }}"
+  delay: "{{ korora_task_delay }}"
+  until: dnf_fedora_repos_result is succeeded
+  become: true
+
+- name: Enable Google Chrome repo
+  ini_file:
+    dest: /etc/yum.repos.d/google-chrome.repo
+    section: google-chrome
+    option: enabled
+    value: 1
+  become: true
+
+- name: Enable RPMFusion NVIDIA repo
+  ini_file:
+    dest: /etc/yum.repos.d/rpmfusion-nonfree-nvidia-driver.repo
+    section: rpmfusion-nonfree-nvidia-driver
+    option: enabled
+    value: 1
+  become: true
+
+- name: Enable RPMFusion Steam repo
+  ini_file:
+    dest: /etc/yum.repos.d/rpmfusion-nonfree-steam.repo
+    section: rpmfusion-nonfree-steam
+    option: enabled
+    value: 1
+  become: true
+
+# Import RPMFusion GPG keys
+- name: Import RPMFusion Free GPG key
+  rpm_key:
+    key: "{{ korora_rpmfusion_free_key }}"
+    state: present
+  register: rpm_key_rpmfusion_free_result
+  retries: "{{ korora_task_retries }}"
+  delay: "{{ korora_task_delay }}"
+  until: rpm_key_rpmfusion_free_result is succeeded
+  become: true
+
+- name: Import RPMFusion Nonfree GPG key
+  rpm_key:
+    key: "{{ korora_rpmfusion_nonfree_key }}"
+    state: present
+  register: rpm_key_rpmfusion_nonfree_result
+  retries: "{{ korora_task_retries }}"
+  delay: "{{ korora_task_delay }}"
+  until: rpm_key_rpmfusion_nonfree_result is succeeded
+  become: true
+
+# Enable RPMFusion repos
+- name: Install RPMFusion free release RPM
+  dnf:
+    name: "{{ korora_rpmfusion_free_rpm }}"
+    state: present
+  register: dnf_rpmfusion_free_result
+  retries: "{{ korora_task_retries }}"
+  delay: "{{ korora_task_delay }}"
+  until: dnf_rpmfusion_free_result is succeeded
+  become: true
+
+- name: Install RPMFusion nonfree release RPM
+  dnf:
+    name: "{{ korora_rpmfusion_nonfree_rpm }}"
+    state: present
+  register: dnf_rpmfusion_nonfree_result
+  retries: "{{ korora_task_retries }}"
+  delay: "{{ korora_task_delay }}"
+  until: dnf_rpmfusion_nonfree_result is succeeded
+  become: true
+
+- name: Add flathub flatpak
+  flatpak_remote:
+    name: flathub
+    state: present
+    flatpakrepo_url: "{{ korora_flatpak_repo }}"
+    method: system
+  ignore_errors: true
+  changed_when: false
+  register: flatpak_flathub_result
+  retries: "{{ korora_task_retries }}"
+  delay: "{{ korora_task_delay }}"
+  until: flatpak_flathub_result is succeeded
+  become: true
+
+- name: Get enabled COPR repos
+  command: dnf copr --enabled list
+  args:
+    warn: false
+  changed_when: false
+  register: dnf_copr_enabled_result
+  retries: "{{ korora_task_retries }}"
+  delay: "{{ korora_task_delay }}"
+  until: dnf_copr_enabled_result is succeeded
+  become: true
+
+- name: Get disabled COPR repos
+  command: dnf copr --disabled list
+  args:
+    warn: false
+  changed_when: false
+  register: dnf_copr_disabled_result
+  retries: "{{ korora_task_retries }}"
+  delay: "{{ korora_task_delay }}"
+  until: dnf_copr_disabled_result is succeeded
+  become: true
+
+- name: Disable COPR repos
+  command: "dnf copr --assumeyes disable {{ item }}"
+  args:
+    warn: false
+  register: dnf_copr_disable_result
+  with_items: "{{ korora_copr['disable'] }}"
+  when: korora_copr['disable'] is defined and korora_copr['disable'] and item in copr_enabled_repos.stdout
+  retries: "{{ korora_task_retries }}"
+  delay: "{{ korora_task_delay }}"
+  until: dnf_copr_disable_result is succeeded
+  become: true
+
+- name: Enable COPR repos
+  command: "dnf copr --assumeyes enable {{ item }}"
+  args:
+    warn: false
+  register: dnf_copr_enable_result
+  with_items: "{{ korora_copr['enable'] }}"
+  when: korora_copr['enable'] is defined and korora_copr['enable'] and not item in copr_enabled_repos.stdout
+  retries: "{{ korora_task_retries }}"
+  delay: "{{ korora_task_delay }}"
+  until: dnf_copr_enable_result is succeeded
+  become: true
+
+- name: Disable custom COPR repos
+  command: "dnf copr --assumeyes disable {{ item }}"
+  args:
+    warn: false
+  register: dnf_copr_disable_custom_result
+  with_items: "{{ korora_copr_custom['disable'] }}"
+  when: korora_copr_custom['disable'] is defined and korora_copr_custom['disable'] and item in copr_enabled_repos.stdout
+  retries: "{{ korora_task_retries }}"
+  delay: "{{ korora_task_delay }}"
+  until: dnf_copr_disable_custom_result is succeeded
+  become: true
+
+- name: Enable custom COPR repos
+  command: "dnf copr --assumeyes enable {{ item }}"
+  args:
+    warn: false
+  register: dnf_copr_enable_custom_result
+  with_items: "{{ korora_copr_custom['enable'] }}"
+  when: korora_copr_custom['enable'] is defined and korora_copr_custom['enable'] and not item in copr_enabled_repos.stdout
+  retries: "{{ korora_task_retries }}"
+  delay: "{{ korora_task_delay }}"
+  until: dnf_copr_enable_custom_result is succeeded
+  become: true

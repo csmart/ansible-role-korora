@@ -1,0 +1,69 @@
+---
+# EDIT: We shouldn't upgrade a graphical system from the command line,
+# use Software GUI app and reboot instead. Keeping for reference.
+# https://lwn.net/Articles/702629/
+#
+# Upgrade all packages (refreshes cache)
+#- name: Upgrade installed packages
+#  dnf:
+#    name: "*"
+#  state: latest
+#  become: true
+
+# Manually update cache to work around bug where dnf module 'update_cache' is broken
+# https://github.com/ansible/ansible/issues/49060
+# https://bugzilla.redhat.com/show_bug.cgi?id=1658694
+- name: Refresh package cache
+  command: "dnf --refresh repolist"
+  args:
+    warn: false
+  changed_when: false
+  register: dnf_refresh_result
+  retries: "{{ korora_task_retries }}"
+  delay: "{{ korora_task_delay }}"
+  until: dnf_refresh_result is succeeded
+  become: true
+
+- name: Remove unwanted common packages
+  dnf:
+    name: "{{ korora_packages_common['remove'] }}"
+    state: absent
+    autoremove: yes
+  register: dnf_remove_result
+  retries: "{{ korora_task_retries }}"
+  delay: "{{ korora_task_delay }}"
+  until: dnf_remove_result is succeeded
+  become: true
+
+- name: Install common packages
+  dnf:
+    name: "{{ korora_packages_common['install'] }}"
+    state: present
+  register: dnf_install_result
+  retries: "{{ korora_task_retries }}"
+  delay: "{{ korora_task_delay }}"
+  until: dnf_install_result is succeeded
+  become: true
+
+- name: Remove unwanted custom packages
+  dnf:
+    name: "{{ korora_packages_custom['remove'] }}"
+    state: absent
+    autoremove: yes
+  register: dnf_remove_custom_result
+  when: korora_packages_custom['remove'] is defined and korora_packages_custom['remove']
+  retries: "{{ korora_task_retries }}"
+  delay: "{{ korora_task_delay }}"
+  until: dnf_remove_custom_result is succeeded
+  become: true
+
+- name: Install custom packages
+  dnf:
+    name: "{{ korora_packages_custom['install'] }}"
+    state: present
+  register: dnf_install_custom_result
+  when: korora_packages_custom['install'] is defined and korora_packages_custom['install']
+  retries: "{{ korora_task_retries }}"
+  delay: "{{ korora_task_delay }}"
+  until: dnf_install_custom_result is succeeded
+  become: true

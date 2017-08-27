@@ -1,0 +1,75 @@
+---
+- name: Ensure man-db and mlocate are installed to update their databases
+  dnf:
+    name: man-db, mlocate
+    state: present
+  register: dnf_mandb_install_result
+  retries: "{{ korora_task_retries }}"
+  delay: "{{ korora_task_delay }}"
+  until: dnf_mandb_install_result is succeeded
+  become: true
+
+- name: Check dconf stat
+  stat: path=/etc/dconf/profile/user
+  register: dconf_dst
+
+- name: Configure dconf user database for legacy overrides
+  copy:
+    src: dconf_user
+    dest: /etc/dconf/profile/user
+    owner: root
+    group: root
+    mode: "u=rw,g=r,o=r"
+  when: not dconf_dst.stat.exists
+  notify:
+    - Reload dconf
+  become: true
+
+- name: Ensure directory exists for Korora extras
+  file:
+    dest: /usr/share/korora
+    state: directory
+    owner: root
+    group: root
+    mode: "u=rwx,g=rx,o=rx"
+  become: true
+
+- name: Install Solarized dircolors for Korora shell profile
+  copy:
+    src: dircolors.ansi-universal
+    dest: /usr/share/korora/dircolors.ansi-universal
+    owner: root
+    group: root
+    mode: "u=rw,g=r,o=r"
+  become: true
+
+- name: Korora shell profile
+  copy:
+    src: korora.sh
+    dest: /etc/profile.d/korora.sh
+    owner: root
+    group: root
+    mode: "u=rw,g=r,o=r"
+  become: true
+
+- name: Configure sysrq magic keys
+  sysctl:
+    name: kernel.sysrq
+    value: "{{ korora_sysrq_value }}"
+    sysctl_set: yes
+    state: present
+    reload: yes
+    sysctl_file: /etc/sysctl.d/90-sysrq.conf
+  become: true
+
+- name: Rebuild man cache
+  command: /usr/bin/mandb
+  register: result_mandb
+  changed_when: false
+  become: true
+
+- name: Rebuild locate cache
+  command: /usr/bin/updatedb
+  register: result_updatedb
+  changed_when: false
+  become: true

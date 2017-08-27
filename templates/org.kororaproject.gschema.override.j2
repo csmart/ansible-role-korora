@@ -1,0 +1,108 @@
+[org.freedesktop.Tracker.Miner.Files]
+index-on-battery=false
+index-on-battery-first-time=false
+
+[org.gnome.desktop.background]
+show-desktop-icons=false
+{% if 'name' in korora_background_image and korora_background_image['name'] %}
+picture-uri='{{ korora_background_image['name'] }}'
+{% endif %}
+
+[org.gnome.desktop.interface]
+clock-show-date=true
+{% if 'name' in korora_cursor_theme and korora_cursor_theme['name'] %}
+cursor-theme='{{ korora_cursor_theme['name'] }}'
+{% endif %}
+{% if 'name' in korora_gtk_theme and korora_gtk_theme['name'] %}
+gtk-theme='{{ korora_gtk_theme['name'] }}'
+{% endif %}
+{% if 'name' in korora_icon_theme and korora_icon_theme['name'] %}
+icon-theme='{{ korora_icon_theme['name'] }}'
+{% endif %}
+{% if 'name' in korora_desktop_font and korora_desktop_font['name'] %}
+font-name='{{ korora_desktop_font['name'] }}'
+{% endif %}
+{% if 'name' in korora_desktop_document_font and korora_desktop_document_font['name'] %}
+document-font-name='{{ korora_desktop_document_font['name'] }}'
+{% endif %}
+{% if 'name' in korora_desktop_monospace_font and korora_desktop_monospace_font['name'] %}
+monospace-font-name='{{ korora_desktop_monospace_font['name'] }}'
+{% endif %}
+
+[org.gnome.desktop.peripherals.mouse]
+natural-scroll=false
+
+[org.gnome.desktop.peripherals.touchpad]
+natural-scroll=true
+tap-to-click=true
+
+[org.gnome.desktop.privacy]
+report-technical-problems=false
+
+[org.gnome.desktop.screensaver]
+{% if 'name' in korora_screensaver_image and korora_screensaver_image['name'] %}
+picture-uri='{{ korora_screensaver_image['name'] }}'
+{% endif %}
+
+[org.gnome.desktop.wm.keybindings]
+show-desktop=['<Super>D']
+
+[org.gnome.desktop.wm.preferences]
+button-layout=':maximize,close'
+{% if 'name' in korora_desktop_titlebar_font and korora_desktop_titlebar_font['name'] %}
+titlebar-font='{{ korora_desktop_titlebar_font['name'] }}'
+{% endif %}
+
+[org.gnome.nautilus.desktop]
+home-icon-visible=false
+trash-icon-visible=false
+
+[org.gnome.nautilus.icon-view]
+default-zoom-level='small'
+
+[org.gnome.nautilus.preferences]
+always-use-location-entry=true
+
+[org.gnome.settings-daemon.peripherals.mouse]
+locate-pointer=false
+
+[org.gnome.shell]
+always-show-log-out=true
+{% if 'enable' in korora_shell_extensions and korora_shell_extensions['enable'] %}
+enabled-extensions={{ korora_shell_extensions['enable'] }}
+{% endif %}
+{% if 'apps' in korora_shell_favourites and korora_shell_favourites['apps'] %}
+favorite-apps={{ korora_shell_favourites['apps'] }}
+{% endif %}
+
+[org.gnome.shell.clock]
+show-date=true
+
+[org.gnome.shell.extensions.dash-to-dock]
+background-opacity=1.0
+custom-theme-running-dots=true
+custom-theme-customize-running-dots=true
+custom-theme-running-dots-color='#cfd6e6'
+custom-theme-running-dots-border-color='#5294e2'
+custom-theme-running-dots-border-width='1'
+dash-max-icon-size=32
+
+[org.gnome.shell.extensions.user-theme]
+{% if 'name' in korora_shell_theme and korora_shell_theme['name'] %}
+name='{{ korora_shell_theme['name'] }}'
+{% endif %}
+
+[org.gnome.shell.extensions.wbe]
+brightness-and-contrast-set-brightness=-0.10
+blur=false
+brightness-and-contrast-set-contrast=-0.10
+desaturate-set-factor=0.10
+separate-blur-on-each-screen=true
+
+[org.gnome.shell.extensions.workspaces-to-dock]
+background-opacity=0.90000000000000002220
+intellihide=false
+workspace-caption-taskbar-icon-size=16
+
+[org.virt-manager.virt-manager]
+system-tray=true

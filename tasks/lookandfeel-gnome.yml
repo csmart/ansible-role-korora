@@ -1,0 +1,191 @@
+---
+- name: "Install look and feel packages for {{ korora_desktop }}"
+  dnf:
+    name: "{{ korora_packages_lookandfeel_gnome['install'] }}"
+    state: present
+  register: dnf_lookfeel_result
+  retries: "{{ korora_task_retries }}"
+  delay: "{{ korora_task_delay }}"
+  until: dnf_lookfeel_result is succeeded
+  become: true
+
+- name: "Install favourite apps for {{ korora_desktop }}"
+  dnf:
+    name: "{{ korora_shell_favourites['install'] }}"
+    state: present
+  register: dnf_shell_favourites_result
+  when: korora_shell_favourites['install'] is defined and korora_shell_favourites['install']
+  retries: "{{ korora_task_retries }}"
+  delay: "{{ korora_task_delay }}"
+  until: dnf_shell_favourites_result is succeeded
+  become: true
+
+- name: "Install Shell extensions for {{ korora_desktop }}"
+  dnf:
+    name: "{{ korora_shell_extensions['install'] }}"
+    state: present
+  register: dnf_shell_extensions_result
+  when: korora_shell_extensions['install'] is defined and korora_shell_extensions['install']
+  retries: "{{ korora_task_retries }}"
+  delay: "{{ korora_task_delay }}"
+  until: dnf_shell_extensions_result is succeeded
+  become: true
+
+- name: "Install GTK theme for {{ korora_desktop }}"
+  dnf:
+    name: "{{ korora_gtk_theme['install'] }}"
+    state: present
+  register: dnf_gtk_theme_result
+  when: korora_gtk_theme['install'] is defined and korora_gtk_theme['install']
+  retries: "{{ korora_task_retries }}"
+  delay: "{{ korora_task_delay }}"
+  until: dnf_gtk_theme_result is succeeded
+  become: true
+
+- name: "Install Shell theme for {{ korora_desktop }}"
+  dnf:
+    name: "{{ korora_shell_theme['install'] }}"
+    state: present
+  register: dnf_shell_theme_result
+  when: korora_shell_theme['install'] is defined and korora_shell_theme['install']
+  retries: "{{ korora_task_retries }}"
+  delay: "{{ korora_task_delay }}"
+  until: dnf_shell_theme_result is succeeded
+  become: true
+
+- name: "Install icon theme for {{ korora_desktop }}"
+  dnf:
+    name: "{{ korora_icon_theme['install'] }}"
+    state: present
+  register: dnf_icon_theme_result
+  when: korora_icon_theme['install'] is defined and korora_icon_theme['install']
+  retries: "{{ korora_task_retries }}"
+  delay: "{{ korora_task_delay }}"
+  until: dnf_icon_theme_result is succeeded
+  become: true
+
+- name: "Install cursor theme for {{ korora_desktop }}"
+  dnf:
+    name: "{{ korora_cursor_theme['install'] }}"
+    state: present
+  register: dnf_cursor_theme_result
+  when: korora_cursor_theme['install'] is defined and korora_cursor_theme['install']
+  retries: "{{ korora_task_retries }}"
+  delay: "{{ korora_task_delay }}"
+  until: dnf_cursor_theme_result is succeeded
+  become: true
+
+- name: "Install desktop font for {{ korora_desktop }}"
+  dnf:
+    name: "{{ korora_desktop_font['install'] }}"
+    state: present
+  register: dnf_desktop_font_result
+  when: korora_desktop_font['install'] is defined and korora_desktop_font['install']
+  retries: "{{ korora_task_retries }}"
+  delay: "{{ korora_task_delay }}"
+  until: dnf_desktop_font_result is succeeded
+  become: true
+
+- name: "Install desktop document font for {{ korora_desktop }}"
+  dnf:
+    name: "{{ korora_desktop_document_font['install'] }}"
+    state: present
+  register: dnf_desktop_document_font_result
+  when: korora_desktop_document_font['install'] is defined and korora_desktop_document_font['install']
+  retries: "{{ korora_task_retries }}"
+  delay: "{{ korora_task_delay }}"
+  until: dnf_desktop_document_font_result is succeeded
+  become: true
+
+- name: "Install desktop monospace font for {{ korora_desktop }}"
+  dnf:
+    name: "{{ korora_desktop_monospace_font['install'] }}"
+    state: present
+  register: dnf_desktop_monospace_font_result
+  when: korora_desktop_monospace_font['install'] is defined and korora_desktop_monospace_font['install']
+  retries: "{{ korora_task_retries }}"
+  delay: "{{ korora_task_delay }}"
+  until: dnf_desktop_monospace_font_result is succeeded
+  become: true
+
+- name: "Install desktop titlebar font for {{ korora_desktop }}"
+  dnf:
+    name: "{{ korora_desktop_titlebar_font['install'] }}"
+    state: present
+  register: dnf_desktop_titlebar_font_result
+  when: korora_desktop_titlebar_font['install'] is defined and korora_desktop_titlebar_font['install']
+  retries: "{{ korora_task_retries }}"
+  delay: "{{ korora_task_delay }}"
+  until: dnf_desktop_titlebar_font_result is succeeded
+  become: true
+
+- name: "Install terminal font for {{ korora_desktop }}"
+  dnf:
+    name: "{{ korora_terminal_font['install'] }}"
+    state: present
+  register: dnf_terminal_font_result
+  when: korora_terminal_font['install'] is defined and korora_terminal_font['install']
+  retries: "{{ korora_task_retries }}"
+  delay: "{{ korora_task_delay }}"
+  until: dnf_terminal_font_result is succeeded
+  become: true
+
+- name: "Install background image for {{ korora_desktop }}"
+  dnf:
+    name: "{{ korora_background_image['install'] }}"
+    state: present
+  register: dnf_background_image_result
+  when: korora_background_image['install'] is defined and korora_background_image['install']
+  retries: "{{ korora_task_retries }}"
+  delay: "{{ korora_task_delay }}"
+  until: dnf_background_image_result is succeeded
+  become: true
+
+- name: "Install screensaver image for {{ korora_desktop }}"
+  dnf:
+    name: "{{ korora_screensaver_image['install'] }}"
+    state: present
+  register: dnf_screensaver_image_result
+  when: korora_screensaver_image['install'] is defined and korora_screensaver_image['install']
+  retries: "{{ korora_task_retries }}"
+  delay: "{{ korora_task_delay }}"
+  until: dnf_screensaver_image_result is succeeded
+  become: true
+
+## Set GNOME terminal config
+- name: Get terminal UUID
+  shell: gsettings get org.gnome.Terminal.ProfilesList default | tr -d \'
+  register: gnome_terminal_uuid
+  changed_when: false
+  become: true
+
+- name: Ensure directory exists for terminal profile
+  file:
+    dest: /etc/dconf/db/local.d
+    state: directory
+    owner: root
+    group: root
+    mode: "u=rwx,g=rx,o=rx"
+  become: true
+
+- name: Configure GNOME terminal profile
+  template:
+    src: 00_korora_terminal.j2
+    dest: /etc/dconf/db/local.d/00_korora_terminal
+    owner: root
+    group: root
+    mode: "u=rw,g=r,o=r"
+  notify:
+    - Reload dconf
+  become: true
+
+- name: Configure GNOME overrides
+  template:
+    src: org.kororaproject.gschema.override.j2
+    dest: /usr/share/glib-2.0/schemas/org.kororaproject.gschema.override
+    owner: root
+    group: root
+    mode: "u=rw,g=r,o=r"
+  notify:
+    - Compile gschema
+  become: true

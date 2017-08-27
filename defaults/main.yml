@@ -1,0 +1,337 @@
+---
+korora_task_retries: 3
+korora_task_delay: 5
+
+## Korora desktop settings
+korora_desktop: gnome
+korora_desktop_font:
+  name: "Open Sans 11"
+  install:
+    - open-sans-fonts
+korora_desktop_document_font:
+  name: "Open Sans 11"
+  install:
+    - open-sans-fonts
+korora_desktop_monospace_font:
+  name: "Droid Sans Mono Regular 11"
+  install:
+    - google-droid-sans-mono-fonts
+korora_desktop_titlebar_font:
+  name: "Open Sans Bold 11"
+  install:
+    - open-sans-fonts
+korora_gtk_theme:
+  name: Arc
+  install:
+    - arc-theme
+korora_cursor_theme:
+  name: breeze_cursors
+  install:
+    - breeze-cursor-theme
+korora_icon_theme:
+  name: Numix-Circle
+  install:
+    - numix-icon-theme-circle
+korora_shell_theme:
+  name: Arc
+  install:
+    - arc-theme
+korora_shell_extensions:
+  enable:
+    - places-menu@gnome-shell-extensions.gcampax.github.com
+    - xrandr-indicator@gnome-shell-extensions.gcampax.github.com
+    - user-theme@gnome-shell-extensions.gcampax.github.com
+    - drive-menu@gnome-shell-extensions.gcampax.github.com
+    - alternative-status-menu@gnome-shell-extensions.gcampax.github.com
+    - openweather-extension@jenslody.de
+    - dash-to-dock@micxgx.gmail.com
+    - workspaces-to-dock@passingthru67.gmail.com
+  install:
+    - gnome-shell-extension-dash-to-dock
+    - gnome-shell-extension-drive-menu
+    - gnome-shell-extension-openweather
+    - gnome-shell-extension-places-menu
+    - gnome-shell-extension-user-theme
+korora_shell_favourites_defaults:
+  apps:
+    - firefox.desktop
+    - org.gnome.Evolution.desktop
+    - vlc.desktop
+    - shotwell.desktop
+    - libreoffice-writer.desktop
+    - org.gnome.Documents.desktop
+    - org.gnome.Nautilus.desktop
+    - org.gnome.Software.desktop
+    - org.gnome.Terminal.desktop
+  install:
+    - firefox
+    - shotwell
+    - vlc
+korora_shell_favourites: "{{ korora_shell_favorites | default(korora_shell_favourites_defaults) }}"
+korora_terminal_font:
+  name: "Fira Mono 11"
+  install:
+    - mozilla-fira-mono-fonts
+korora_background_image:
+  name: /usr/share/backgrounds/f28/extras/f28-extras.xml
+  install:
+    - f28-backgrounds-extras-base
+korora_screensaver_image:
+  name: /usr/share/backgrounds/f28/extras/f28-extras.xml
+  install:
+    - f28-backgrounds-extras-base
+
+## Korora system settings
+korora_auth_options: "with-mkhomedir with-sudo with-fingerprint"
+korora_selinux_state: enforcing
+korora_sysrq_value: "1"
+
+## Repos
+korora_rpmfusion_free_key: https://rpmfusion.org/keys?action=AttachFile&do=get&target=RPM-GPG-KEY-rpmfusion-free-fedora-{{ ansible_distribution_major_version }}
+korora_rpmfusion_nonfree_key: https://rpmfusion.org/keys?action=AttachFile&do=get&target=RPM-GPG-KEY-rpmfusion-nonfree-fedora-{{ ansible_distribution_major_version }}
+korora_rpmfusion_free_rpm: https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-{{ ansible_distribution_major_version }}.noarch.rpm
+korora_rpmfusion_nonfree_rpm: https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-{{ ansible_distribution_major_version }}.noarch.rpm
+korora_flatpak_repo: https://dl.flathub.org/repo/flathub.flatpakrepo
+
+## firewall.yml
+korora_firewall_default_zone: FedoraWorkstation
+korora_firewall:
+  allow:
+    - ipp-client
+    - mdns
+    - samba
+    - samba-client
+    - ssh
+  deny:
+    - dhcpv6-client
+## Let users define firewall rules without overriding, e.g.:
+#korora_firewall_custom:
+#  allow:
+#    - service1
+#  deny:
+#    - service2
+korora_firewall_custom:
+  allow:
+  deny:
+
+## Cool Other Package Repo (Copr)
+korora_copr:
+  enable:
+  disable:
+
+## Let users define extra Copr without overriding, e.g.:
+#korora_copr_custom:
+#  enable:
+#    - copr/repo1
+#  disable:
+#    - copr/repo2
+korora_copr_custom:
+  enable:
+  disable:
+
+## services.yml
+## Packages required for services to be enabled
+korora_services:
+  install:
+    - ModemManager
+    - NetworkManager
+    - "{{ 'ksmtuned' if (ansible_distribution_major_version > '28') else 'ksm' }}"
+    - lm_sensors-sensord
+    - spice-vdagent
+  enable:
+    - ModemManager
+    - NetworkManager
+    - fstrim.timer
+    - ksm
+    - sensord
+    - spice-vdagentd
+    - sshd
+  disable:
+    - abrt-ccpp
+    - abrt-oops
+    - abrt-vmcore
+    - abrt-xorg
+    - abrtd
+    - capi
+    - iprdump
+    - iprinit
+    - iprupdate
+    - iscsi
+    - iscsid
+    - isdn
+    - multipathd
+    - netfs
+    - network
+    - nfs
+    - nfslock
+    - pcscd
+    - rpcbind
+    - rpcgssd
+    - rpcidmapd
+    - rpcsvcgssd
+    - sendmail
+    - sm-client
+
+## Let users define extra services to enable/disable without overriding, e.g.:
+#korora_services_custom:
+#  enable:
+#    - enable_this_service
+#  disable:
+#    - disable_this_service
+korora_services_custom:
+  install:
+  enable:
+  disable:
+
+## packages.yml
+## Let users define extra packages to install/remove without overriding, e.g.:
+#korora_packages_custom:
+#  install:
+#    - install_this_package
+#  remove:
+#    - remove_this_package
+korora_packages_custom:
+  install:
+  remove:
+
+## Look and feel packages for Korora desktops
+korora_packages_lookandfeel_gnome:
+  install:
+    - gnome-tweaks
+
+## Default set of packages common to all Korora desktops
+korora_packages_common:
+  install:
+    # Archiving
+    - p7zip
+    - p7zip-plugins
+
+    # Cloud
+    - owncloud-client
+
+    # Images
+    - gimp
+    - inkscape
+
+    # Device support
+    - akmods
+    - cups-bjnp
+    - dkms
+    - epson-inkjet-printer-escpr # support for recent Epson inkjet printers
+    - hpijs
+    - hplip # support for extra HP printers
+    - kernel-devel
+    - libsane-hpaio # support for extra HP scanners
+    - libva-intel-driver # HW video decode for intel
+    - lm_sensors-sensord
+    - memtest86+
+    - pptp-setup
+    - sane-backends
+    - sane-backends-drivers-cameras
+    - sane-backends-drivers-scanners
+    - spice-server
+    - spice-vdagent
+    - splix
+
+    # Filesystems
+    - btrfs-progs
+    - exfat-utils
+    - fuse
+    - fuse-exfat
+    - gparted
+
+    # Multimedia
+    - HandBrake-gui
+    - alsa-plugins-pulseaudio
+    - alsa-utils
+    - ffmpegthumbnailer
+    - flac
+    - gphoto2 #for camera support in shotwell
+    - gstreamer-ffmpeg
+    - gstreamer-plugins-bad
+    - gstreamer-plugins-bad-free
+    - gstreamer-plugins-bad-free-extras
+    - gstreamer-plugins-good
+    - gstreamer-plugins-good-extras
+    - gstreamer-plugins-ugly
+    - gstreamer1-libav
+    - gstreamer1-plugins-bad-free
+    - gstreamer1-plugins-bad-free-extras
+    - gstreamer1-plugins-bad-freeworld
+    - gstreamer1-plugins-good
+    - gstreamer1-plugins-good-extras
+    - gstreamer1-plugins-ugly
+    - lame
+    - libaacs
+    - libbluray
+    - libdvdnav
+    - libdvdread
+    - libvpx-utils
+    - pavucontrol
+    - raw-thumbnailer
+    - shotwell
+    - vlc
+    - vlc-extras
+    - vorbis-tools
+
+    # Office/Productivity Suite
+    - "@libreoffice"
+    - libreoffice-langpack-en
+    - libreoffice-ogltrans
+    - libreoffice-opensymbol-fonts
+    - libreoffice-pdfimport
+    - libreoffice-ure
+    - libreoffice-xsltfilter
+
+    # Package Management
+    - PackageKit-gstreamer-plugin
+    - dnf-plugin-system-upgrade
+    - dnf-plugins-core
+    - python3-dnf-plugin-tracer
+
+    # System/Development
+    - android-tools
+    - aspell-en
+    - chrony
+    - cowsay
+    - expect
+    - fdupes
+    - fpaste
+    - fprintd-pam
+    - frei0r-plugins
+    - gcc
+    - git
+    - htop
+    - mlocate
+    - ntfsprogs
+    - powertop
+    - pybluez
+    - redhat-lsb-core
+    - vim
+
+    # System Administration/Configuration
+    - firewall-config
+    - fonts-tweak-tool
+    - liveusb-creator
+    - policycoreutils-gui
+    - screen
+    - screenfetch
+    - setools-console
+    - tmux
+
+    # Terminal Enhancements
+    - bash-completion
+    - PackageKit-command-not-found
+
+    # Web
+    - firefox
+    - mozilla-ublock-origin
+  remove:
+    - abrt
+    - ntp
+    - system-config-date
+    - system-config-firewall*
+    - system-config-keyboard
+    - system-config-language
+    - system-config-services
+    - system-config-users

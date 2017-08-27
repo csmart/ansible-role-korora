@@ -1,0 +1,13 @@
+---
+# handlers file for korora
+# Reload dconf to get terminal config
+- name: Reload dconf
+  command: /usr/bin/dconf update
+  changed_when: false
+  become: true
+
+# Compile overrides
+- name: Compile gschema
+  command: /usr/bin/glib-compile-schemas /usr/share/glib-2.0/schemas
+  changed_when: false
+  become: true

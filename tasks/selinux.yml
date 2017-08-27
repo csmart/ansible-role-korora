@@ -1,0 +1,16 @@
+---
+- name: Install dependencies for SELinux module
+  dnf:
+    name: libselinux-python
+    state: present
+  register: dnf_selinux_result
+  retries: "{{ korora_task_retries }}"
+  delay: "{{ korora_task_delay }}"
+  until: dnf_selinux_result is succeeded
+  become: true
+
+- name: Write SELinux config
+  selinux:
+    policy: targeted
+    state: "{{ korora_selinux_state }}"
+  become: true
