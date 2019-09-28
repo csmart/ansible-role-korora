@@ -76,6 +76,26 @@
   until: dnf_rpmfusion_nonfree_result is succeeded
   become: true
 
+- name: Install RPMFusion tainted free release RPM
+  dnf:
+    name: rpmfusion-free-release-tainted
+    state: present
+  register: dnf_install_tainted_free_result
+  retries: "{{ korora_task_retries }}"
+  delay: "{{ korora_task_delay }}"
+  until: dnf_install_tainted_free_result is succeeded
+  become: true
+
+- name: Install RPMFusion tainted nonfree release RPM
+  dnf:
+    name: rpmfusion-nonfree-release-tainted
+    state: present
+  register: dnf_install_tainted_nonfree_result
+  retries: "{{ korora_task_retries }}"
+  delay: "{{ korora_task_delay }}"
+  until: dnf_install_tainted_nonfree_result is succeeded
+  become: true
+
 - name: Add flathub flatpak
   flatpak_remote:
     name: flathub
