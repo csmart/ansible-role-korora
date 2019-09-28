@@ -330,7 +330,9 @@ korora_packages_common:
     - abrt
     - ntp
     - system-config-date
-    - system-config-firewall*
+    - system-config-firewall
+    - system-config-firewall-base
+    - system-config-firewall-tui
     - system-config-keyboard
     - system-config-language
     - system-config-services
