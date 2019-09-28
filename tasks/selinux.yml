@@ -1,7 +1,7 @@
 ---
 - name: Install dependencies for SELinux module
   dnf:
-    name: libselinux-python
+    name: python3-libselinux
     state: present
   register: dnf_selinux_result
   retries: "{{ korora_task_retries }}"

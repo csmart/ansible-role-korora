@@ -218,7 +218,6 @@ korora_packages_common:
     - cups-bjnp
     - dkms
     - epson-inkjet-printer-escpr # support for recent Epson inkjet printers
-    - hpijs
     - hplip # support for extra HP printers
     - kernel-devel
     - libsane-hpaio # support for extra HP scanners
@@ -248,12 +247,6 @@ korora_packages_common:
     - flac
     - gphoto2 #for camera support in shotwell
     - gstreamer-ffmpeg
-    - gstreamer-plugins-bad
-    - gstreamer-plugins-bad-free
-    - gstreamer-plugins-bad-free-extras
-    - gstreamer-plugins-good
-    - gstreamer-plugins-good-extras
-    - gstreamer-plugins-ugly
     - gstreamer1-libav
     - gstreamer1-plugins-bad-free
     - gstreamer1-plugins-bad-free-extras
@@ -328,6 +321,7 @@ korora_packages_common:
     - mozilla-ublock-origin
   remove:
     - abrt
+    - gnome-abrt
     - ntp
     - system-config-date
     - system-config-firewall

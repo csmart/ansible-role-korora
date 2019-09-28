@@ -15,7 +15,7 @@
     dest: /etc/yum.repos.d/google-chrome.repo
     section: google-chrome
     option: enabled
-    value: 1
+    value: "1"
   become: true
 
 - name: Enable RPMFusion NVIDIA repo
@@ -23,7 +23,7 @@
     dest: /etc/yum.repos.d/rpmfusion-nonfree-nvidia-driver.repo
     section: rpmfusion-nonfree-nvidia-driver
     option: enabled
-    value: 1
+    value: "1"
   become: true
 
 - name: Enable RPMFusion Steam repo
@@ -31,7 +31,7 @@
     dest: /etc/yum.repos.d/rpmfusion-nonfree-steam.repo
     section: rpmfusion-nonfree-steam
     option: enabled
-    value: 1
+    value: "1"
   become: true
 
 # Import RPMFusion GPG keys
@@ -94,6 +94,16 @@
   retries: "{{ korora_task_retries }}"
   delay: "{{ korora_task_delay }}"
   until: dnf_install_tainted_nonfree_result is succeeded
+  become: true
+
+- name: Ensure flatpak is installed
+  dnf:
+    name: flatpak
+    state: present
+  register: dnf_flatpak_result
+  retries: "{{ korora_task_retries }}"
+  delay: "{{ korora_task_delay }}"
+  until: dnf_flatpak_result is succeeded
   become: true
 
 - name: Add flathub flatpak
