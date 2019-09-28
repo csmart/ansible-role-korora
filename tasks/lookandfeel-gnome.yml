@@ -154,9 +154,11 @@
 
 ## Set GNOME terminal config
 - name: Get terminal UUID
-  shell: gsettings get org.gnome.Terminal.ProfilesList default | tr -d \'
+  shell: set -o pipefail && gsettings get org.gnome.Terminal.ProfilesList default | tr -d \'
   register: gnome_terminal_uuid
   changed_when: false
+  args:
+    executable: /usr/bin/bash
   become: true
 
 - name: Ensure directory exists for terminal profile
