@@ -28,7 +28,7 @@
   dnf:
     name: "{{ korora_packages_common['remove'] }}"
     state: absent
-    autoremove: yes
+    autoremove: no
   register: dnf_remove_result
   retries: "{{ korora_task_retries }}"
   delay: "{{ korora_task_delay }}"
@@ -49,7 +49,7 @@
   dnf:
     name: "{{ korora_packages_custom['remove'] }}"
     state: absent
-    autoremove: yes
+    autoremove: no
   register: dnf_remove_custom_result
   when: korora_packages_custom['remove'] is defined and korora_packages_custom['remove']
   retries: "{{ korora_task_retries }}"
