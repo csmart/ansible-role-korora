@@ -14,10 +14,13 @@
   command: "authselect current"
   register: auth_current
   changed_when: false
+  ignore_errors: true
   become: true
 
 - name: Set authentication settings
   shell: "authselect select sssd --force {{ korora_auth_options }} >/dev/null ; authselect current"
   register: auth_new
-  changed_when: auth_current.stdout != auth_new.stdout
+  changed_when:
+    - auth_current.stdout is defined and auth_current.stdout
+    - auth_current.stdout != auth_new.stdout
   become: true
