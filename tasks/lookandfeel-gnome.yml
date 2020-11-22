@@ -1,4 +1,14 @@
 ---
+- name: "Install critical path for {{ korora_desktop }}"
+  dnf:
+    name: "@critical-path-gnome"
+    state: present
+  register: dnf_gnome_result
+  retries: "{{ korora_task_retries }}"
+  delay: "{{ korora_task_delay }}"
+  until: dnf_gnome_result is succeeded
+  become: true
+
 - name: "Install look and feel packages for {{ korora_desktop }}"
   dnf:
     name: "{{ korora_packages_lookandfeel_gnome['install'] }}"
