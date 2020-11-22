@@ -87,8 +87,8 @@ korora_selinux_state: enforcing
 korora_sysrq_value: "1"
 
 ## Repos
-korora_rpmfusion_free_key: https://rpmfusion.org/keys?action=AttachFile&do=get&target=RPM-GPG-KEY-rpmfusion-free-fedora-{{ ansible_distribution_major_version }}
-korora_rpmfusion_nonfree_key: https://rpmfusion.org/keys?action=AttachFile&do=get&target=RPM-GPG-KEY-rpmfusion-nonfree-fedora-{{ ansible_distribution_major_version }}
+korora_rpmfusion_free_key: https://rpmfusion.org/keys?action=AttachFile&do=get&target=RPM-GPG-KEY-rpmfusion-free-fedora-{{ ansible_distribution_major_version if ansible_distribution_major_version <= "32" else "2020" }}
+korora_rpmfusion_nonfree_key: https://rpmfusion.org/keys?action=AttachFile&do=get&target=RPM-GPG-KEY-rpmfusion-nonfree-fedora-{{ ansible_distribution_major_version if ansible_distribution_major_version <= "32" else "2020" }}
 korora_rpmfusion_free_rpm: https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-{{ ansible_distribution_major_version }}.noarch.rpm
 korora_rpmfusion_nonfree_rpm: https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-{{ ansible_distribution_major_version }}.noarch.rpm
 korora_flatpak_repo: https://dl.flathub.org/repo/flathub.flatpakrepo
@@ -298,7 +298,6 @@ korora_packages_common:
     - mlocate
     - ntfsprogs
     - powertop
-    - pybluez
     - redhat-lsb-core
     - vim
 

@@ -16,6 +16,7 @@
     section: google-chrome
     option: enabled
     value: "1"
+    mode: 0644
   become: true
 
 - name: Enable RPMFusion NVIDIA repo
@@ -24,6 +25,7 @@
     section: rpmfusion-nonfree-nvidia-driver
     option: enabled
     value: "1"
+    mode: 0644
   become: true
 
 - name: Enable RPMFusion Steam repo
@@ -32,6 +34,7 @@
     section: rpmfusion-nonfree-steam
     option: enabled
     value: "1"
+    mode: 0644
   become: true
 
 # Import RPMFusion GPG keys
@@ -43,6 +46,7 @@
   retries: "{{ korora_task_retries }}"
   delay: "{{ korora_task_delay }}"
   until: rpm_key_rpmfusion_free_result is succeeded
+  failed_when: false
   become: true
 
 - name: Import RPMFusion Nonfree GPG key
@@ -53,6 +57,7 @@
   retries: "{{ korora_task_retries }}"
   delay: "{{ korora_task_delay }}"
   until: rpm_key_rpmfusion_nonfree_result is succeeded
+  failed_when: false
   become: true
 
 # Enable RPMFusion repos

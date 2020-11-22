@@ -1,4 +1,10 @@
 ---
+- name: Ensure systemd graphical target is set
+  command: systemctl set-default graphical.target
+  register: result_target
+  changed_when: false
+  become: true
+
 - name: Ensure man-db and mlocate are installed to update their databases
   dnf:
     name: man-db, mlocate

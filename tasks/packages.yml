@@ -39,6 +39,7 @@
   dnf:
     name: "{{ korora_packages_common['install'] }}"
     state: present
+    skip_broken: true
   register: dnf_install_result
   retries: "{{ korora_task_retries }}"
   delay: "{{ korora_task_delay }}"
@@ -50,6 +51,7 @@
     name: "{{ korora_packages_custom['remove'] }}"
     state: absent
     autoremove: no
+    skip_broken: true
   register: dnf_remove_custom_result
   when: korora_packages_custom['remove'] is defined and korora_packages_custom['remove']
   retries: "{{ korora_task_retries }}"
